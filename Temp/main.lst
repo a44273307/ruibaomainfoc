@@ -1,0 +1,578 @@
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\Output\main.obj
+COMPILER INVOKED BY: D:\keil4\C51\BIN\C51.EXE ..\User\main.c LARGE OPTIMIZE(1,SPEED) BROWSE INCDIR(..\User;..\Library) D
+                    -EBUG OBJECTEXTEND PRINT(..\Temp\main.lst) TABS(2) OBJECT(..\Output\main.obj)
+
+line level    source
+
+   1          /************************************************************************************
+   2             
+   3          程序名称： （晶振频率18.432MHz） 
+   4          功能说明: 通过串口3发送“Everything is possible!”  
+   5                    波特率9600，数据位8，奇偶效验无，停止位1，数据流控制无  
+   6          ************************************************************************************/
+   7          #include "stc15f2k60s2.h"     // 单片机STC15F2K60S2头文件,可以不再加入reg51.h
+   8          #include <intrins.h>          // 加入此头文件后,可使用_nop_库函数
+   9          #include "delay.h"            // 延时函数头文件
+  10          #include "uart.h"             // 串行通信函数头文件
+  11          #define  uint unsigned int  
+  12          #define  uchar unsigned char  
+  13          uint weishu1,weishu2,weishu3,weishu4;
+  14          uchar buf1[100];
+  15          uchar buf2[100];
+  16          uchar buf3[100];
+  17          uchar buf4[100];
+  18          
+  19          uint temp1,temp2,temp3,temp4;
+  20          uint num1,num2,num3,num4;
+  21          bit flag_in1,flag_in2,flag_in3,flag_in4,flag_in5;
+  22          
+  23          
+  24          
+  25          int  tx,yan_shi,duibi_num; 
+  26          char jishu_sendcushu;
+  27          
+  28          uint yanshi_num;
+  29          bit start_num,youliao,shangchuan_ok;
+  30          bit  saomiao_ok;
+  31          //sbit x0 = P4^3;
+  32          //sbit x1 = P4^4; 
+  33          //sbit x2 = P2^0; 
+  34          //sbit x3 = P2^1;  
+  35          //sbit x4 = P2^2;  
+  36          //sbit x5 = P2^3;
+  37          //sbit x6 = P2^4; 
+  38          //sbit x7 = P2^5;
+  39          //sbit x10 = P2^6;
+  40          //sbit x11 = P2^7; 
+  41          //sbit x12 = P4^5;
+  42          //sbit x13 = P4^6;
+  43          
+  44          sbit x0 = P2^0; 
+  45          sbit x1 = P2^1;  
+  46          sbit x2 = P2^2;  
+  47          sbit x3 = P2^3;
+  48          sbit x4 = P2^4; 
+  49          sbit x5 = P2^5;
+  50          sbit x6 = P2^6;
+  51          sbit x7 = P2^7; 
+  52          
+  53          /*****************输出*************/
+  54          //sbit y0 = P3^2;  
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 2   
+
+  55          //sbit y1 = P3^3; 
+  56          //sbit y2 = P3^4;
+  57          //sbit y3 = P3^5;
+  58          //sbit y4 = P3^6;
+  59          //sbit y5 = P3^7;
+  60          //sbit y6 = P4^1;
+  61          //sbit y7 = P4^2;
+  62          
+  63          //sbit run_led = P4^7;
+  64          sbit y0 = P4^4;  
+  65          sbit y1 = P4^3; 
+  66          sbit y2 = P4^2;
+  67          sbit y3 = P4^1;
+  68          sbit y4 = P3^7;
+  69          sbit y5 = P5^4;
+  70          //sbit y6 = P4^1;
+  71          //sbit y7 = P4^2;
+  72          
+  73          
+  74          #define stop x0
+  75          #define air_in x1
+  76          #define qg_up x2
+  77          #define qg_centre x3
+  78          #define qg_down x4
+  79          #define start x5 
+  80          #define time_in x6
+  81          #define sensor x7
+  82          
+  83          #define time_out y0
+  84          #define qg1 y1
+  85          #define qg2 y2
+  86          #define count y5
+  87          
+  88          bit start_num;
+  89          void delay_ms(int m)
+  90          {
+  91   1        int x,y;
+  92   1        for(x=m;x>0;x--)
+  93   1        for(y=220;y>0;y--);
+  94   1      }
+  95          
+  96          
+  97          void open_scanner3()
+  98          {
+  99   1        sendbyte3(0x16);
+ 100   1        sendbyte3(0x54);
+ 101   1        sendbyte3(0x0D);
+ 102   1      }
+ 103          
+ 104          void close_scanner3()
+ 105          {
+ 106   1        sendbyte3(0x16);
+ 107   1        sendbyte3(0x55);
+ 108   1        sendbyte3(0x0D);
+ 109   1      }
+ 110          
+ 111          
+ 112          void printf2(char *puts)
+ 113          {
+ 114   1         while(*puts) 
+ 115   1        {
+ 116   2          sendbyte2(*puts);
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 3   
+
+ 117   2          puts++;
+ 118   2        }
+ 119   1      }
+ 120          
+ 121          void saomiaoshangchuan()
+ 122          {
+ 123   1        sendbyte2('B');
+ 124   1        sendbyte2('S');
+ 125   1        sendbyte2(' ');
+ 126   1        for(tx=0;tx<weishu3;tx++)
+ 127   1        {
+ 128   2          sendbyte2(buf3[tx]);
+ 129   2        }
+ 130   1        sendbyte2(';');
+ 131   1      }
+ 132          
+ 133          void saomiaoshangchuan_S1()
+ 134          {
+ 135   1        sendbyte1('B');
+ 136   1        sendbyte1('S');
+ 137   1        sendbyte1(' ');
+ 138   1        for(tx=0;tx<weishu3;tx++)
+ 139   1        {
+ 140   2          sendbyte1(buf3[tx]);
+ 141   2        }
+ 142   1        sendbyte1(';');
+ 143   1      }
+ 144          
+ 145          void yahe_ok()
+ 146          {
+ 147   1        sendbyte2('D');
+ 148   1        sendbyte2('A');
+ 149   1        sendbyte2(' ');
+ 150   1        //sendbyte2('L');
+ 151   1      //  sendbyte2('1');
+ 152   1      //  sendbyte2(',');
+ 153   1      //  sendbyte2('0');
+ 154   1      //  sendbyte2(',');
+ 155   1        for(tx=0;tx<weishu3;tx++)
+ 156   1        {
+ 157   2          sendbyte2(buf3[tx]);
+ 158   2        }
+ 159   1        sendbyte2(',');
+ 160   1        sendbyte2('0');
+ 161   1        sendbyte2(';');
+ 162   1      }
+ 163          
+ 164          
+ 165          void yahe_ok_S1()
+ 166          {
+ 167   1        sendbyte1('D');
+ 168   1        sendbyte1('A');
+ 169   1        sendbyte1(' ');
+ 170   1        //sendbyte2('L');
+ 171   1      //  sendbyte2('1');
+ 172   1      //  sendbyte2(',');
+ 173   1      //  sendbyte2('0');
+ 174   1      //  sendbyte2(',');
+ 175   1        for(tx=0;tx<weishu3;tx++)
+ 176   1        {
+ 177   2          sendbyte1(buf3[tx]);
+ 178   2        }
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 4   
+
+ 179   1        sendbyte1(',');
+ 180   1        sendbyte1('0');
+ 181   1        sendbyte1(';');
+ 182   1      }
+ 183          
+ 184          
+ 185          void cline_shuju()
+ 186          { 
+ 187   1        int i;
+ 188   1        for(i=0;i<30;i++)
+ 189   1        buf2[i]== ' ';
+*** WARNING C275 IN LINE 189 OF ..\User\main.c: expression with possibly no effect
+ 190   1      }
+ 191          void io_inint()
+ 192          {
+ 193   1        P0M1 = 0; P0M0 = 0; //设置P0.0~P0.7为准双向口
+ 194   1        P1M1 = 0; P1M0 = 0; //设置P1.0~P1.7为准双向口
+ 195   1        P2M1 = 0; P2M0 = 0; //设置P2.0~P2.7为准双向口 
+ 196   1        P3M1 = 0; P3M0 = 0; //设置P3.0~P3.7为准双向口
+ 197   1        P4M1 = 0; P4M0 = 0; //设置P4.0~P4.7为准双向口
+ 198   1        P5M1 = 0; P5M0 = 0; //设置P5.0~P5.7为准双向口
+ 199   1      }
+ 200          
+ 201          
+ 202          void key_sensor()
+ 203          {
+ 204   1        if(!sensor && air_in && !qg_up)
+ 205   1        {
+ 206   2          delay_ms(50);
+ 207   2          if(!sensor && air_in && !qg_up)
+ 208   2          {
+ 209   3            youliao=1;
+ 210   3          }
+ 211   2        }
+ 212   1      }
+ 213          
+ 214          void key()
+ 215          {
+ 216   1        if(!start)
+ 217   1        {
+ 218   2          delay_ms(50);
+ 219   2          if(!start)
+ 220   2          {
+ 221   3            start_num=1;
+ 222   3          }
+ 223   2        }
+ 224   1      }
+ 225          
+ 226          uint delay_c;
+ 227          
+ 228          
+ 229          bit xiaya_daowei;
+ 230          void main()                                             // 主函数     
+ 231          {
+ 232   1        
+ 233   1        io_inint();
+ 234   1        Uart23Init();
+ 235   1        
+ 236   1        
+ 237   1        
+ 238   1        
+ 239   1        while(!stop)
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 5   
+
+ 240   1        {
+ 241   2          close_scanner3();
+ 242   2          delay_ms(100);
+ 243   2          close_scanner3();
+ 244   2          while(!stop);
+ 245   2        }
+ 246   1        Timer0Init();
+ 247   1        UartInit();
+ 248   1        
+ 249   1        Uart4Init();
+ 250   1      ////  while(1){
+ 251   1      ////    open_scanner3();
+ 252   1      ////    y5 = ~y5;
+ 253   1      ////    delay_ms(1000);
+ 254   1      ////    delay_ms(1000);
+ 255   1      ////    delay_ms(1000);
+ 256   1      ////    close_scanner3();
+ 257   1      ////    y5 = ~y5;
+ 258   1      ////    delay_ms(1000);
+ 259   1      ////    delay_ms(1000);
+ 260   1      ////    delay_ms(1000);
+ 261   1      ////    sendbyte2(2);
+ 262   1      ////    
+ 263   1      ////  }
+ 264   1        
+ 265   1        kaishi:
+ 266   1        start_num=0;
+ 267   1        youliao=0;
+ 268   1        y4=1;
+ 269   1        num2=0;
+ 270   1        num3=0;
+ 271   1        num4=0;
+ 272   1      
+ 273   1        weishu2=0;
+ 274   1        weishu3=0;
+ 275   1        weishu4=0;
+ 276   1        close_scanner3();
+ 277   1        //y5=0;
+ 278   1      while(1)
+ 279   1       {
+ 280   2         key_sensor();
+ 281   2         while(youliao == 1){
+ 282   3           open_scanner3();
+ 283   3           for(delay_c=0;delay_c<100;delay_c++)
+ 284   3           {
+ 285   4             delay_ms(100);
+ 286   4             if(num3==1) break;
+ 287   4           }
+ 288   3           if(num3==0){
+ 289   4             close_scanner3();
+ 290   4             youliao=0;
+ 291   4           }
+ 292   3           if(num3==1){
+ 293   4             weishu2=0;
+ 294   4             flag_in2=0;
+ 295   4             saomiaoshangchuan();
+ 296   4             saomiaoshangchuan_S1();
+ 297   4             while(num3){
+ 298   5               if(num2==1){
+ 299   6                 num2=0;
+ 300   6                 delay_ms(200);
+ 301   6      //           sendbyte2(buf2[0]);
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 6   
+
+ 302   6      //           sendbyte2(buf2[1]);
+ 303   6      //           sendbyte2(buf2[2]);
+ 304   6      //           sendbyte2(buf2[3]);
+ 305   6                 
+ 306   6                 if((buf2[0]=='S') && (buf2[1]==' ') && (buf2[2]=='0') && (buf2[3]==',')&&(weishu3>=3)){
+ 307   7                   shangchuan_ok=1;
+ 308   7                   flag_in2=0;
+ 309   7                   num2=0;
+ 310   7                   while(shangchuan_ok){
+ 311   8                     key();
+ 312   8                     if(start_num==1){
+ 313   9                       start_num=0;
+ 314   9                       qg1=0;
+ 315   9                       while(qg_down);
+ 316   9                       time_out=0;
+ 317   9                       qg2=0;
+ 318   9                       count=0;
+ 319   9                       delay_ms(600);
+ 320   9                       count=1;
+ 321   9                       xiaya_daowei=1;
+ 322   9                       while(xiaya_daowei){
+ 323  10                         if(time_in==0){
+ 324  11                           delay_ms(50);
+ 325  11                           if(time_in==0){
+ 326  12                             yahe_ok();
+ 327  12                             yahe_ok_S1();
+ 328  12                               delay_ms(150);
+ 329  12                               qg2=1;
+ 330  12                               delay_ms(150);
+ 331  12                               qg1=1;
+ 332  12                               time_out=1;
+ 333  12                               shangchuan_ok=0;
+ 334  12                               num2=0;
+ 335  12                               num3=0;
+ 336  12                               start_num=0;
+ 337  12                               youliao=0;
+ 338  12                               while(!start);
+ 339  12                               xiaya_daowei=0;
+ 340  12                             goto kaishi;
+ 341  12                           }
+ 342  11                          }
+ 343  10                       }   
+ 344   9                    }
+ 345   8                  }
+ 346   7                 }
+ 347   6                 if((buf2[0]=='S') && (buf2[1]==' ') && (buf2[2]=='1') && (buf2[3]==',')){
+ 348   7                   youliao=0;
+ 349   7                   num3=0;
+ 350   7                   num2=0;
+ 351   7                   goto kaishi;
+ 352   7                 }
+ 353   6               }
+ 354   5             }
+ 355   4           } 
+ 356   3         }
+ 357   2       }   
+ 358   1      }
+ 359             
+ 360             
+ 361          
+ 362             
+ 363             
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 7   
+
+ 364          uint time,lv_bo;   
+ 365          void Timer0() interrupt 1
+ 366          {
+ 367   1        time++;
+ 368   1        if((!start) && (!start_num)) {
+ 369   2           lv_bo++;
+ 370   2          }
+ 371   1        if(start) {
+ 372   2           lv_bo=0; 
+ 373   2           start_num=0;
+ 374   2          }
+ 375   1        if(lv_bo>=50) {
+ 376   2           start_num=1;
+ 377   2          }
+ 378   1        
+ 379   1          
+ 380   1        if(time>1000)
+ 381   1        {
+ 382   2          time=0;
+ 383   2        //  y5=~y5;
+ 384   2        //  run_led=~run_led;
+ 385   2        }
+ 386   1      if(!stop)
+ 387   1       {
+ 388   2        delay_ms(1);
+ 389   2        if(!stop)
+ 390   2         {
+ 391   3           
+ 392   3          IAP_CONTR=0x60;
+ 393   3         }
+ 394   2        }
+ 395   1      }
+ 396          
+ 397          void UARTInterrupt(void) interrupt 4 
+ 398          {
+ 399   1         if(RI)
+ 400   1          {
+ 401   2            RI=0;
+ 402   2      //      temp1 = SBUF;
+ 403   2      //      if(temp1==0x0a)
+ 404   2      //        IAP_CONTR=0x60;
+ 405   2            temp2 = SBUF;
+ 406   2            if(flag_in2==1){
+ 407   3               buf2[weishu2] = temp2;
+ 408   3               weishu2++;
+ 409   3               if(weishu2 >= 80) weishu2=0;
+ 410   3          }
+ 411   2      //       }
+ 412   2          
+ 413   2          if((temp2 == 'B') && (flag_in2==0))
+ 414   2              {
+ 415   3                flag_in2=1;
+ 416   3                weishu2=0;
+ 417   3                num2=1;
+ 418   3              }
+ 419   2            
+ 420   2            
+ 421   2          }
+ 422   1        else 
+ 423   1          {
+ 424   2            TI=0; 
+ 425   2          }
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 8   
+
+ 426   1      if(TI)//发送中断..
+ 427   1         {
+ 428   2              TI = 0;
+ 429   2         }    
+ 430   1      }
+ 431          
+ 432          void uart2(void ) interrupt 8 
+ 433          {
+ 434   1        if (S2CON & S2RI)
+ 435   1        {
+ 436   2          S2CON &= ~S2RI;         
+ 437   2          temp2 = S2BUF;
+ 438   2      //   if(temp2 == ';')
+ 439   2      //       {
+ 440   2      //         flag_in2=0;
+ 441   2      //         num2=1;
+ 442   2      //       }
+ 443   2      //      else
+ 444   2      //       {
+ 445   2          if(flag_in2==1){
+ 446   3               buf2[weishu2] = temp2;
+ 447   3               weishu2++;
+ 448   3               if(weishu2 >= 80) weishu2=0;
+ 449   3          }
+ 450   2      //       }
+ 451   2          
+ 452   2          if((temp2 == 'B') && (flag_in2==0))
+ 453   2              {
+ 454   3                flag_in2=1;
+ 455   3                weishu2=0;
+ 456   3                num2=1;
+ 457   3              }
+ 458   2        }
+ 459   1        if (S2CON & S2TI)
+ 460   1          {
+ 461   2            //y1=0;
+ 462   2              S2CON &= ~S2TI;         //清除S2TI位
+ 463   2              busy2 = 0;               //清忙标志
+ 464   2          }  
+ 465   1      }
+ 466          
+ 467            
+ 468          
+ 469          
+ 470          void Uart3() interrupt 17 using 1
+ 471          {
+ 472   1          if (S3CON & S3RI)
+ 473   1          {
+ 474   2              S3CON &= ~S3RI;         //??S3RI?
+ 475   2              temp3 = S3BUF;
+ 476   2              if(flag_in3==1)
+ 477   2              {
+ 478   3                if(temp3 == 0XDE)
+ 479   3                 {
+ 480   4                   flag_in3=0;
+ 481   4                   num3=1;
+ 482   4                 }
+ 483   3                else
+ 484   3                 {
+ 485   4                   buf3[weishu3] = temp3;
+ 486   4                   weishu3++;
+ 487   4                   if(weishu3 >= 80)  weishu3=0;
+C51 COMPILER V9.52.0.0   MAIN                                                              03/23/2022 08:24:50 PAGE 9   
+
+ 488   4                 }
+ 489   3               }
+ 490   2              if((temp3 == 0XAC) && (flag_in3==0))
+ 491   2                  {
+ 492   3                    flag_in3=1;
+ 493   3                    weishu3=0;
+ 494   3                  }
+ 495   2         }
+ 496   1      if (S3CON & S3TI)
+ 497   1          {
+ 498   2              S3CON &= ~S3TI;         //清除S3TI位
+ 499   2              busy3 = 0;               //清忙标志
+ 500   2          }
+ 501   1      }
+ 502          
+ 503          void Uart4() interrupt 18 
+ 504          {
+ 505   1          if (S4CON & S4RI)
+ 506   1          {
+ 507   2              S4CON &= ~S4RI;         //??S4RI?
+ 508   2              temp4=S4BUF;
+ 509   2              if(flag_in4==1)
+ 510   2               {
+ 511   3                  if(temp4 ==';')//0x44
+ 512   3                   {
+ 513   4                     flag_in4=0;
+ 514   4                     num4=1;
+ 515   4                     //Y4=0;
+ 516   4                   }
+ 517   3                  else
+ 518   3                   {
+ 519   4                     buf4[weishu4] = temp4;
+ 520   4                     weishu4++;
+ 521   4                   }
+ 522   3                }
+ 523   2                if(((temp4 =='B') || (temp4 =='D')) && (flag_in4==0))//0x49
+ 524   2                {
+ 525   3                  flag_in4=1;
+ 526   3                  weishu4=0;
+ 527   3                }
+ 528   2         }
+ 529   1      if(TI4)
+ 530   1        {
+ 531   2          CLR_TI4();
+ 532   2          busy4 = 0;               //清忙标志
+ 533   2        }
+ 534   1      }
+ 535          
+ 536          
+ 537          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2058    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    450    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =     10    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
