@@ -1,0 +1,1 @@
+"..\User\uart.c" LARGE OPTIMIZE (1,SPEED) BROWSE INCDIR(..\User;..\Library) DEBUG OBJECTEXTEND PRINT(..\Temp\uart.lst) OBJECT(..\Output\uart.obj)

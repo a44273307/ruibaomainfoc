@@ -36,5 +36,7 @@ void sendbyte2(unsigned char ch);
 void sendbyte3(unsigned char ch);
 void sendbyte4(unsigned char ch);
 
+void PrintString(const char *puts);
+
 
 #endif

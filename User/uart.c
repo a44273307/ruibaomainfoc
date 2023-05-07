@@ -74,6 +74,7 @@ void Uart23Init(void)		//115200@24.000MHz
 	IE2 |= 0x01;                 //使能串口2中断
 	IE2 |= 0x08;                 //使能串口3中断
 	EA=1;
+	P_SW2 = (P_SW2 & ~2) | (0 & 0x02);	//切换IO
 	//	//IE2&=0xFE关闭串口2
 //	IE2&=0xF7;	//关闭串口3
 }
@@ -115,15 +116,18 @@ void Uart4Init(void)		//9600bps@24.000MHz	.串口4
 void sendbyte1(unsigned char ch)
 {
 	int i;
-	EA=0;
+	// EA=0;
     TI     =   0;  //清零串口发送完成中断请求标志
     SBUF   =   ch;
     while(TI ==0) //等待发送完成
 	{
-		for(i=0;i<2000; i++){
-			if(	TI) break;
-		}
-		break;
+		// for(i=0;i<2000; i++){
+		// 	if(	TI) break;
+		// }
+		// break;
+
+
+
 	}
 	EA=1;
 }
@@ -160,7 +164,15 @@ void sendbyte4(unsigned char ch)
 	  busy4 = 1;
     S4BUF = ch;                //写数据到UART2数据寄存器
 }
-
-
+int debug=1;
+void PrintString(const char *puts)
+{
+	if (debug==0)
+	{
+		return ;
+	}
+	
+    for (; *puts != 0;	puts++)  sendbyte1(*puts); 	//遇到停止符0结束
+}
 
 

@@ -3,7 +3,52 @@
 <pre>
 <h1>礦ision Build Log</h1>
 <h2>Project:</h2>
-G:\程序文件\2020\2020年5月\峻凌压台\Project\lces.uvproj
-Project File Date:  11/12/2018
+D:\瑞宝科\新工作\4串口进行修改的\Project\lces.uvproj
+Project File Date:  10/23/2022
 
 <h2>Output:</h2>
+Build target 'Project'
+compiling delay.c...
+compiling main.c...
+..\User\main.c(216): warning C275: expression with possibly no effect
+..\User\main.c(288): warning C280: 'show': unreferenced local variable
+..\User\main.c(266): warning C291: not every exit path returns a value
+compiling uart.c...
+..\User\uart.c(118): warning C280: 'i': unreferenced local variable
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_PRINTF2?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?CLINE_SHUJU?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TEST?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDBYTE4?UART
+Program Size: data=24.6 xdata=722 code=4858
+creating hex file from "..\Output\lces"...
+"..\Output\lces" - 0 Error(s), 8 Warning(s).
+Build target 'Project'
+compiling main.c...
+..\User\main.c(148): warning C280: 'c': unreferenced local variable
+..\User\main.c(154): warning C280: 'downstr': unreferenced local variable
+..\User\main.c(175): error C202: 'temp2': undefined identifier
+..\User\main.c(193): error C202: 'temp3': undefined identifier
+..\User\main.c(208): error C202: 'temp4': undefined identifier
+Target not created
+Build target 'Project'
+compiling main.c...
+..\User\main.c(148): warning C280: 'c': unreferenced local variable
+..\User\main.c(154): warning C280: 'downstr': unreferenced local variable
+..\User\main.c(100): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_PRINTF2?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETXIN?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DEALRECI?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDBYTE4?UART
+Program Size: data=23.4 xdata=597 code=2404
+creating hex file from "..\Output\lces"...
+"..\Output\lces" - 0 Error(s), 7 Warning(s).

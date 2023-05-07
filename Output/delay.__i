@@ -1,0 +1,1 @@
+"..\User\delay.c" LARGE OPTIMIZE (1,SPEED) BROWSE INCDIR(..\User;..\Library) DEBUG OBJECTEXTEND PRINT(..\Temp\delay.lst) OBJECT(..\Output\delay.obj)

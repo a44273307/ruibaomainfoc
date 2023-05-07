@@ -1,0 +1,1 @@
+"..\User\main.c" LARGE OPTIMIZE (1,SPEED) BROWSE INCDIR(..\User;..\Library) DEBUG OBJECTEXTEND PRINT(..\Temp\main.lst) OBJECT(..\Output\main.obj)
