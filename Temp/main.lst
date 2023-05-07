@@ -1,4 +1,4 @@
-C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:27:35 PAGE 1   
+C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:52:25 PAGE 1   
 
 
 C51 COMPILER V9.05, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52          void printf2(char *puts)
   53          {
   54   1              while (*puts)
-C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:27:35 PAGE 2   
+C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:52:25 PAGE 2   
 
   55   1              {
   56   2                      sendbyte2(*puts);
@@ -126,7 +126,7 @@ line level    source
  114   1                      for (y = 220; y > 0; y--)
  115   1                              ;
  116   1      }
-C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:27:35 PAGE 3   
+C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:52:25 PAGE 3   
 
  117          
  118          int xiugaiflag=0;
@@ -150,9 +150,9 @@ line level    source
  136   1      }
  137          void buildsendshuju(int dianliu)
  138          {
- 139   1              int dianya=2000;
+ 139   1              int dianya=2047;
  140   1              char dataxx[100]={0};
- 141   1              sprintf(dataxx,"AB%04dE%04dC%04dV%04dB10#",dianya,dianliu,4095-dianya,4095-dianliu);
+ 141   1              sprintf(dataxx,"AB%04dE%04dC%04dV%04dB10#",dianya,dianliu,4095-dianliu,4095-dianya);
  142   1              printf("%s",dataxx);
  143   1              print4(dataxx);
  144   1      }
@@ -166,144 +166,178 @@ line level    source
  152   1              printf("get xiugairec %d\r\n",xiugairec);
  153   1              buildsendshuju(xiugairec);
  154   1      }
- 155          
- 156          void main()
- 157          {
- 158   1              char shuju[100]="sdsdsd:setdianliu760";
- 159   1      int ans;
- 160   1              io_inint();
- 161   1              Uart23Init();
- 162   1      
- 163   1              Timer0Init();
- 164   1              UartInit();
+ 155          // void jisuan1()
+ 156          // {
+ 157                  
+ 158          // }
+ 159          void main()
+ 160          {
+ 161   1              char shuju[100]="sdsdsd:setdianliu760";
+ 162   1              int ans;
+ 163   1              io_inint();
+ 164   1              Uart23Init();
  165   1      
- 166   1              Uart4Init();
- 167   1      
- 168   1              while (1)
- 169   1              {
- 170   2                      delay_ms(100);
- 171   2                      // ans=jisuandianliu(shuju);
- 172   2                      runningcheck();
- 173   2                      // printf("ans %d",ans);
- 174   2                      // PrintString("12345");
- 175   2                      // sendbyte3('a');
- 176   2              }
- 177   1      }
-*** WARNING C280 IN LINE 159 OF ..\User\main.c: 'ans': unreferenced local variable
-C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:27:35 PAGE 4   
+ 166   1              Timer0Init();
+ 167   1              UartInit();
+ 168   1      
+ 169   1              Uart4Init();
+ 170   1      
+ 171   1              while (1)
+ 172   1              {
+ 173   2                      delay_ms(100);
+ 174   2                      // ans=jisuandianliu(shuju);
+ 175   2                      runningcheck();
+ 176   2                      // printf("ans %d",ans);
+ 177   2                      // PrintString("12345");
+ 178   2                      // sendbyte3('a');
+C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:52:25 PAGE 4   
 
- 178          
- 179          
- 180          
+ 179   2              }
+ 180   1      }
+*** WARNING C280 IN LINE 162 OF ..\User\main.c: 'ans': unreferenced local variable
  181          
- 182          uint weishu1, weishu2, weishu3, weishu4;
- 183          char buf1[100];
- 184          char buf2[100];
- 185          char buf3[100];
- 186          char buf4[100];
- 187          char temp1, temp2, temp3, temp4;
- 188          
- 189          
- 190          int timeleft1, timeleft2, timeleft3, timeleft4;
- 191          void chuankou3put(char c)
- 192          {
- 193   1              buf3[weishu3++] = c;
- 194   1              if (weishu3 > 80)
- 195   1                      weishu3 = 0;
- 196   1              timeleft3 = 20;
- 197   1      }
- 198          void chuankou3jisuan()
- 199          {
- 200   1              // PrintString(buf3);
- 201   1              jisuandianliu(buf3);
- 202   1              memset(buf3, 0, sizeof(buf3));
- 203   1              weishu3 = 0;
- 204   1      }
- 205          void chuankou3time()
- 206          {
- 207   1              if (timeleft3 > 0)
- 208   1              {
- 209   2                      timeleft3--;
- 210   2                      if (timeleft3 == 0) // 数据一次收完了.
- 211   2                      {
- 212   3                              chuankou3jisuan();
- 213   3                      }
- 214   2              }
- 215   1      }
- 216          void Timer0() interrupt 1
- 217          {
- 218   1              chuankou3time();
- 219   1      }
- 220          void UARTInterrupt(void) interrupt 4
+ 182          
+ 183          
+ 184          
+ 185          uint weishu1, weishu2, weishu3, weishu4;
+ 186          char buf1[100];
+ 187          char buf2[100];
+ 188          char buf3[100];
+ 189          char buf4[100];
+ 190          char temp1, temp2, temp3, temp4;
+ 191          
+ 192          
+ 193          int timeleft1, timeleft2, timeleft3, timeleft4;
+ 194          void chuankou3put(char c)
+ 195          {
+ 196   1              buf3[weishu3++] = c;
+ 197   1              if (weishu3 > 80)
+ 198   1                      weishu3 = 0;
+ 199   1              timeleft3 = 20;
+ 200   1      }
+ 201          void chuankou3jisuan()
+ 202          {
+ 203   1              // PrintString(buf3);
+ 204   1              jisuandianliu(buf3);
+ 205   1              memset(buf3, 0, sizeof(buf3));
+ 206   1              weishu3 = 0;
+ 207   1      }
+ 208          void chuankou3time()
+ 209          {
+ 210   1              if (timeleft3 > 0)
+ 211   1              {
+ 212   2                      timeleft3--;
+ 213   2                      if (timeleft3 == 0) // 数据一次收完了.
+ 214   2                      {
+ 215   3                              chuankou3jisuan();
+ 216   3                      }
+ 217   2              }
+ 218   1      }
+ 219          
+ 220          void chuankou1put(char c)
  221          {
- 222   1              char downstr;
- 223   1              if (RI)
- 224   1              {
- 225   2                      RI = 0;
- 226   2              }
- 227   1              else
- 228   1              {
- 229   2                      TI = 0;
- 230   2              }
- 231   1              if (TI) // 发送中断..
- 232   1              {
- 233   2                      TI = 0;
- 234   2              }
- 235   1      }
-*** WARNING C280 IN LINE 222 OF ..\User\main.c: 'downstr': unreferenced local variable
- 236          
- 237          void uart2(void) interrupt 8
- 238          {
-C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:27:35 PAGE 5   
+ 222   1              buf1[weishu1++] = c;
+ 223   1              if (weishu1 > 80)
+ 224   1                      weishu1 = 0;
+ 225   1              timeleft1 = 20;
+ 226   1      }
+ 227          void chuankou1jisuan()
+ 228          {
+ 229   1              // PrintString(buf1);
+ 230   1              // jisuandianliu(buf1);
+ 231   1              memset(buf1, 0, sizeof(buf1));
+ 232   1              weishu1 = 0;
+ 233   1      }
+ 234          void chuankou1time()
+ 235          {
+ 236   1              if (timeleft1 > 0)
+ 237   1              {
+ 238   2                      timeleft1--;
+ 239   2                      if (timeleft1 == 0) // 数据一次收完了.
+C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:52:25 PAGE 5   
 
- 239   1              if (S2CON & S2RI)
- 240   1              {
- 241   2                      S2CON &= ~S2RI;
- 242   2                      temp2 = S2BUF;
+ 240   2                      {
+ 241   3                              chuankou1jisuan();
+ 242   3                      }
  243   2              }
- 244   1              if (S2CON & S2TI)
- 245   1              {
- 246   2                      // y1=0;
- 247   2                      S2CON &= ~S2TI; // 清除S2TI位
- 248   2                      busy2 = 0;              // 清忙标志
- 249   2              }
+ 244   1      }
+ 245          
+ 246          
+ 247          void Timer0() interrupt 1
+ 248          {
+ 249   1              chuankou3time();
  250   1      }
- 251          
- 252          void Uart3() interrupt 17 using 1
- 253          {
- 254   1              if (S3CON & S3RI)
+ 251          void UARTInterrupt(void) interrupt 4
+ 252          {
+ 253   1              char downstr;
+ 254   1              if (RI)
  255   1              {
- 256   2                      S3CON &= ~S3RI; //??S3RI?
- 257   2                      temp3 = S3BUF;
- 258   2                      chuankou3put(temp3);
- 259   2              }
- 260   1              if (S3CON & S3TI)
- 261   1              {
- 262   2                      S3CON &= ~S3TI; // 清除S3TI位
- 263   2                      busy3 = 0;              // 清忙标志
- 264   2              }
- 265   1      }
- 266          
- 267          void Uart4() interrupt 18
- 268          {
- 269   1              if (S4CON & S4RI)
- 270   1              {
- 271   2                      S4CON &= ~S4RI; //??S4RI?
- 272   2                      temp4 = S4BUF;
- 273   2              }
- 274   1              if (TI4)
- 275   1              {
- 276   2                      CLR_TI4();
- 277   2                      busy4 = 0; // 清忙标志
- 278   2              }
- 279   1      }
+ 256   2                      RI = 0;
+ 257   2                      chuankou1put(SBUF);
+ 258   2              }
+ 259   1              else
+ 260   1              {
+ 261   2                      TI = 0;
+ 262   2              }
+ 263   1              if (TI) // 发送中断..
+ 264   1              {
+ 265   2                      TI = 0;
+ 266   2              }
+ 267   1      }
+*** WARNING C280 IN LINE 253 OF ..\User\main.c: 'downstr': unreferenced local variable
+ 268          
+ 269          void uart2(void) interrupt 8
+ 270          {
+ 271   1              if (S2CON & S2RI)
+ 272   1              {
+ 273   2                      S2CON &= ~S2RI;
+ 274   2                      temp2 = S2BUF;
+ 275   2              }
+ 276   1              if (S2CON & S2TI)
+ 277   1              {
+ 278   2                      // y1=0;
+ 279   2                      S2CON &= ~S2TI; // 清除S2TI位
+ 280   2                      busy2 = 0;              // 清忙标志
+ 281   2              }
+ 282   1      }
+ 283          
+ 284          void Uart3() interrupt 17 using 1
+ 285          {
+ 286   1              if (S3CON & S3RI)
+ 287   1              {
+ 288   2                      S3CON &= ~S3RI; //??S3RI?
+ 289   2                      temp3 = S3BUF;
+ 290   2                      chuankou3put(temp3);
+ 291   2              }
+ 292   1              if (S3CON & S3TI)
+ 293   1              {
+ 294   2                      S3CON &= ~S3TI; // 清除S3TI位
+ 295   2                      busy3 = 0;              // 清忙标志
+ 296   2              }
+ 297   1      }
+ 298          
+ 299          void Uart4() interrupt 18
+ 300          {
+C51 COMPILER V9.05   MAIN                                                                  05/07/2023 13:52:25 PAGE 6   
+
+ 301   1              if (S4CON & S4RI)
+ 302   1              {
+ 303   2                      S4CON &= ~S4RI; //??S4RI?
+ 304   2                      temp4 = S4BUF;
+ 305   2              }
+ 306   1              if (TI4)
+ 307   1              {
+ 308   2                      CLR_TI4();
+ 309   2                      busy4 = 0; // 清忙标志
+ 310   2              }
+ 311   1      }
 *** WARNING C291 IN LINE 99 OF ..\User\main.c: not every exit path returns a value
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1409    ----
+   CODE SIZE        =   1600    ----
    CONSTANT SIZE    =    267    ----
-   XDATA SIZE       =    663    ----
+   XDATA SIZE       =    664    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

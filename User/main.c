@@ -136,9 +136,9 @@ void jisuandianliu(char *p)
 }
 void buildsendshuju(int dianliu)
 {
-	int dianya=2000;
+	int dianya=2047;
 	char dataxx[100]={0};
-	sprintf(dataxx,"AB%04dE%04dC%04dV%04dB10#",dianya,dianliu,4095-dianya,4095-dianliu);
+	sprintf(dataxx,"AB%04dE%04dC%04dV%04dB10#",dianya,dianliu,4095-dianliu,4095-dianya);
 	printf("%s",dataxx);
 	print4(dataxx);
 }
@@ -152,11 +152,14 @@ void runningcheck()
 	printf("get xiugairec %d\r\n",xiugairec);
 	buildsendshuju(xiugairec);
 }
-
+// void jisuan1()
+// {
+	
+// }
 void main()
 {
 	char shuju[100]="sdsdsd:setdianliu760";
-int ans;
+	int ans;
 	io_inint();
 	Uart23Init();
 
@@ -213,6 +216,34 @@ void chuankou3time()
 		}
 	}
 }
+
+void chuankou1put(char c)
+{
+	buf1[weishu1++] = c;
+	if (weishu1 > 80)
+		weishu1 = 0;
+	timeleft1 = 20;
+}
+void chuankou1jisuan()
+{
+	// PrintString(buf1);
+	// jisuandianliu(buf1);
+	memset(buf1, 0, sizeof(buf1));
+	weishu1 = 0;
+}
+void chuankou1time()
+{
+	if (timeleft1 > 0)
+	{
+		timeleft1--;
+		if (timeleft1 == 0) // 数据一次收完了.
+		{
+			chuankou1jisuan();
+		}
+	}
+}
+
+
 void Timer0() interrupt 1
 {
 	chuankou3time();
@@ -223,6 +254,7 @@ void UARTInterrupt(void) interrupt 4
 	if (RI)
 	{
 		RI = 0;
+		chuankou1put(SBUF);
 	}
 	else
 	{
