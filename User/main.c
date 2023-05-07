@@ -134,6 +134,14 @@ void jisuandianliu(char *p)
 	xiugaiflag=1;
 	xiugairec=ans;
 }
+void buildsendshuju(int dianliu)
+{
+	int dianya=2000;
+	char dataxx[100]={0};
+	sprintf(dataxx,"AB%04dE%04dC%04dV%04dB10#",dianya,dianliu,4095-dianya,4095-dianliu);
+	printf("%s",dataxx);
+	print4(dataxx);
+}
 void runningcheck()
 {
 	if(xiugaiflag==0)
@@ -141,9 +149,10 @@ void runningcheck()
 		return ;
 	}
 	xiugaiflag=0;
-	printf("get xiugairec %d",xiugairec);
-
+	printf("get xiugairec %d\r\n",xiugairec);
+	buildsendshuju(xiugairec);
 }
+
 void main()
 {
 	char shuju[100]="sdsdsd:setdianliu760";

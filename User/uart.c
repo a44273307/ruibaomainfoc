@@ -162,6 +162,7 @@ void print3(char *p)
 		p++;
 	}
 }
+
 /*----------------------------
 通过串口4发送串口数据
 ----------------------------*/
@@ -170,6 +171,14 @@ void sendbyte4(unsigned char ch)
     while (busy4);               //等待前面的数据发送完成
 	  busy4 = 1;
     S4BUF = ch;                //写数据到UART2数据寄存器
+}
+void print4(char *p)
+{
+	while (*p != '\0')
+	{
+		sendbyte4(*p);
+		p++;
+	}
 }
 int debug=1;
 void PrintString(const char *puts)

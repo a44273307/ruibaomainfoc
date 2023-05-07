@@ -1,4 +1,4 @@
-C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 1   
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:27:35 PAGE 1   
 
 
 C51 COMPILER V9.05, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52          {
   53   1              SCON = 0x50;            //8位数据,可变波特率
   54   1              AUXR |= 0x40;           //定时器1时钟为Fosc,即1T
-C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 2   
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:27:35 PAGE 2   
 
   55   1              AUXR &= 0xFE;           //串口1选择定时器1为波特率发生器
   56   1              TMOD &= 0x0F;           //设定定时器1为16位自动重装方式
@@ -126,7 +126,7 @@ line level    source
  114          
  115          
  116          void sendbyte1(unsigned char ch)
-C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 3   
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:27:35 PAGE 3   
 
  117          {
  118   1      
@@ -176,40 +176,49 @@ line level    source
  162   2                      p++;
  163   2              }
  164   1      }
- 165          /*----------------------------
- 166          通过串口4发送串口数据
- 167          ----------------------------*/
- 168          void sendbyte4(unsigned char ch)
- 169          {
- 170   1          while (busy4);               //等待前面的数据发送完成
- 171   1                busy4 = 1;
- 172   1          S4BUF = ch;                //写数据到UART2数据寄存器
- 173   1      }
- 174          int debug=1;
- 175          void PrintString(const char *puts)
+ 165          
+ 166          /*----------------------------
+ 167          通过串口4发送串口数据
+ 168          ----------------------------*/
+ 169          void sendbyte4(unsigned char ch)
+ 170          {
+ 171   1          while (busy4);               //等待前面的数据发送完成
+ 172   1                busy4 = 1;
+ 173   1          S4BUF = ch;                //写数据到UART2数据寄存器
+ 174   1      }
+ 175          void print4(char *p)
  176          {
- 177   1              if (debug==0)
+ 177   1              while (*p != '\0')
  178   1              {
-C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 4   
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:27:35 PAGE 4   
 
- 179   2                      return ;
- 180   2              }
- 181   1              
- 182   1          for (; *puts != 0;  puts++)  sendbyte1(*puts);      //遇到停止符0结束
- 183   1      }
- 184          
- 185          
- 186          char putchar (char dat)
- 187          {
- 188   1              sendbyte1(dat);
- 189   1              return (dat);
- 190   1      }
+ 179   2                      sendbyte4(*p);
+ 180   2                      p++;
+ 181   2              }
+ 182   1      }
+ 183          int debug=1;
+ 184          void PrintString(const char *puts)
+ 185          {
+ 186   1              if (debug==0)
+ 187   1              {
+ 188   2                      return ;
+ 189   2              }
+ 190   1              
+ 191   1          for (; *puts != 0;  puts++)  sendbyte1(*puts);      //遇到停止符0结束
+ 192   1      }
+ 193          
+ 194          
+ 195          char putchar (char dat)
+ 196          {
+ 197   1              sendbyte1(dat);
+ 198   1              return (dat);
+ 199   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    339    ----
+   CODE SIZE        =    399    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     13    ----
+   XDATA SIZE       =     16    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
