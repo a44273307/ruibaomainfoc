@@ -115,7 +115,7 @@ void Uart4Init(void)		//9600bps@24.000MHz	.串口4
 
 void sendbyte1(unsigned char ch)
 {
-	int i;
+
 	// EA=0;
     TI     =   0;  //清零串口发送完成中断请求标志
     SBUF   =   ch;
@@ -154,7 +154,14 @@ void sendbyte3(unsigned char ch)
 	  busy3 = 1;
     S3BUF = ch;                //写数据到UART2数据寄存器
 }
-
+void print3(char *p)
+{
+	while (*p != '\0')
+	{
+		sendbyte3(*p);
+		p++;
+	}
+}
 /*----------------------------
 通过串口4发送串口数据
 ----------------------------*/
@@ -176,3 +183,8 @@ void PrintString(const char *puts)
 }
 
 
+char putchar (char dat)
+{
+	sendbyte1(dat);
+	return (dat);
+}

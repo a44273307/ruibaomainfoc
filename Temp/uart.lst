@@ -1,4 +1,4 @@
-C51 COMPILER V9.05   UART                                                                  05/07/2023 12:20:36 PAGE 1   
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 1   
 
 
 C51 COMPILER V9.05, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52          {
   53   1              SCON = 0x50;            //8位数据,可变波特率
   54   1              AUXR |= 0x40;           //定时器1时钟为Fosc,即1T
-C51 COMPILER V9.05   UART                                                                  05/07/2023 12:20:36 PAGE 2   
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 2   
 
   55   1              AUXR &= 0xFE;           //串口1选择定时器1为波特率发生器
   56   1              TMOD &= 0x0F;           //设定定时器1为16位自动重装方式
@@ -126,10 +126,10 @@ line level    source
  114          
  115          
  116          void sendbyte1(unsigned char ch)
-C51 COMPILER V9.05   UART                                                                  05/07/2023 12:20:36 PAGE 3   
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 3   
 
  117          {
- 118   1              int i;
+ 118   1      
  119   1              // EA=0;
  120   1          TI     =   0;  //清零串口发送完成中断请求标志
  121   1          SBUF   =   ch;
@@ -145,7 +145,6 @@ line level    source
  131   2              }
  132   1              EA=1;
  133   1      }
-*** WARNING C280 IN LINE 118 OF ..\User\uart.c: 'i': unreferenced local variable
  134          
  135          /*----------------------------
  136          通过串口2发送串口数据
@@ -169,36 +168,48 @@ line level    source
  154   1                busy3 = 1;
  155   1          S3BUF = ch;                //写数据到UART2数据寄存器
  156   1      }
- 157          
- 158          /*----------------------------
- 159          通过串口4发送串口数据
- 160          ----------------------------*/
- 161          void sendbyte4(unsigned char ch)
- 162          {
- 163   1          while (busy4);               //等待前面的数据发送完成
- 164   1                busy4 = 1;
- 165   1          S4BUF = ch;                //写数据到UART2数据寄存器
- 166   1      }
- 167          int debug=1;
- 168          void PrintString(const char *puts)
+ 157          void print3(char *p)
+ 158          {
+ 159   1              while (*p != '\0')
+ 160   1              {
+ 161   2                      sendbyte3(*p);
+ 162   2                      p++;
+ 163   2              }
+ 164   1      }
+ 165          /*----------------------------
+ 166          通过串口4发送串口数据
+ 167          ----------------------------*/
+ 168          void sendbyte4(unsigned char ch)
  169          {
- 170   1              if (debug==0)
- 171   1              {
- 172   2                      return ;
- 173   2              }
- 174   1              
- 175   1          for (; *puts != 0;  puts++)  sendbyte1(*puts);      //遇到停止符0结束
- 176   1      }
- 177          
-C51 COMPILER V9.05   UART                                                                  05/07/2023 12:20:36 PAGE 4   
+ 170   1          while (busy4);               //等待前面的数据发送完成
+ 171   1                busy4 = 1;
+ 172   1          S4BUF = ch;                //写数据到UART2数据寄存器
+ 173   1      }
+ 174          int debug=1;
+ 175          void PrintString(const char *puts)
+ 176          {
+ 177   1              if (debug==0)
+ 178   1              {
+C51 COMPILER V9.05   UART                                                                  05/07/2023 13:00:33 PAGE 4   
 
- 178          
+ 179   2                      return ;
+ 180   2              }
+ 181   1              
+ 182   1          for (; *puts != 0;  puts++)  sendbyte1(*puts);      //遇到停止符0结束
+ 183   1      }
+ 184          
+ 185          
+ 186          char putchar (char dat)
+ 187          {
+ 188   1              sendbyte1(dat);
+ 189   1              return (dat);
+ 190   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    260    ----
+   CODE SIZE        =    339    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     11    ----
+   XDATA SIZE       =     13    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
@@ -206,4 +217,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
